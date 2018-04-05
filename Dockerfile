@@ -1,7 +1,9 @@
 FROM ubuntu:latest
 
 RUN apt-get update \
-  && apt-get install -y vim git curl \
+  && apt-get install -y vim git curl zsh \
+  && curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | bash - \
+  && chsh -s /bin/zsh \
   && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
   && apt-get install -y nodejs \
   && npm install -g yarn \
@@ -17,7 +19,7 @@ RUN apt-get update \
 VOLUME /workspace
 WORKDIR /workspace
 
-EXPOSE 80 3000
+EXPOSE 8181 3000
 
 ENV USERNAME admin
 ENV PASSWORD admin@123
