@@ -1,17 +1,24 @@
-FROM ubuntu:latest
+FROM ubuntu:18.04
+
+# For Chinese Users
+# ADD sources.list /etc/apt/sources.list
 
 RUN apt-get update \
-  && apt-get install -y vim git curl zsh \
+  && apt-get install -y curl vim git gnupg zsh \
   && curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | bash - \
-  && chsh -s /bin/zsh \
-  && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
+  && chsh -s /bin/zsh
+
+RUN cd /opt \
+  && git clone --depth 1 https://github.com/c9/core.git c9sdk \
+  && cd c9sdk \
+  && apt-get install -y make gcc python \
+  && scripts/install-sdk.sh
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
   && apt-get install -y nodejs \
   && npm install -g yarn \
-  && cd /opt \
-  && git clone https://github.com/c9/core.git c9sdk \
-  && cd c9sdk \
-  && apt-get install -y make gcc \
-  && scripts/install-sdk.sh \
+  # For Chinese Users
+  # && npm install -g yarn --registry=http://registry.npm.taobao.org \
   && mkdir /workspace \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/*
